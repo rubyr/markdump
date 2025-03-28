@@ -1,5 +1,7 @@
 ---
-import BaseLayout from "../layouts/base-layout.astro"
+import BaseLayout from '../layouts/base-layout.astro';
+import supabase from '../util/supabase';
+import Timestamp from '../components/timestamp';
 const phrases = [
     ['A simpler, better way to share your docs.', 10],
     ['Give me all your private documents.', 1],
@@ -10,9 +12,31 @@ const phrases = [
     return acc;
 }, []);
 const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+
+const { data: latest, error } = await supabase
+    .from('posts')
+    .select('id, title, created_at')
+    .eq('unlisted', false)
+    .limit(10);
 ---
+
 <BaseLayout>
     <h1>Markdump</h1>
     <small>{phrase}</small>
     <hr />
+    <h2>Latest posts</h2>
+    {
+        latest?.length ? (
+            <ul>
+                {latest.map((post) => (
+                    <li>
+                        <a href={`/posts/${post.id}`}>{post.title}</a> by Anonymous
+                        (<Timestamp time={post.created_at} />)
+                    </li>
+                ))}
+            </ul>
+        ) : (
+            <p>(there are no posts. make one?)</p>
+        )
+    }
 </BaseLayout>
