@@ -1,0 +1,10 @@
+---
+import DocRoot from "./doc-root.astro";
+import Header from "../components/header.astro";
+const { title = "Markdump" } = Astro.props;
+---
+
+<DocRoot title={title}>
+    <Header />
+    <slot />
+</DocRoot>

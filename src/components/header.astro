@@ -1,0 +1,47 @@
+<header>
+    <div class="left">
+        <a href="/" class="title"># <span class="underline">Markdum</span>p</a>
+    </div>
+    <div class="right">
+        <a class="new-post" href="/new">+ new</a>
+    </div>
+</header>
+
+<style>
+    header {
+        margin: 0 0 2rem;
+        display: flex;
+        justify-content: space-between;
+
+        > div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+
+    a.title {
+        color: var(--heading-color);
+        margin-bottom: var(--spacing-base);
+        font-weight: var(--font-weight-bold);
+        line-height: 1.2;
+        letter-spacing: -0.025em;
+        font-size: 2rem;
+
+        .underline {
+            text-decoration: underline;
+        }
+    }
+
+    .new-post {
+        padding: 0.25rem 0.5rem;
+        min-width: 0;
+        background: var(--gradient-success);
+        color: #fff;
+        border-radius: 0.25rem;
+
+        &::before {
+            opacity: 0;
+        }
+    }
+</style>

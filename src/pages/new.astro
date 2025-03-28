@@ -1,0 +1,9 @@
+---
+import BaseLayout from '../layouts/base-layout.astro';
+import NewPostForm from '../components/new-post-form/new-post-form';
+---
+
+<BaseLayout title="New - Markdump">
+    <h1>New post</h1>
+    <NewPostForm client:load />
+</BaseLayout>

@@ -1,1 +1,18 @@
-helo :)
+---
+import BaseLayout from "../layouts/base-layout.astro"
+const phrases = [
+    ['A simpler, better way to share your docs.', 10],
+    ['Give me all your private documents.', 1],
+    ['Feed me, seymour.', 1],
+    ['DOC STUCK! DOC STUCK!!! PLEASE!!! I BEG YOU!!!', 1],
+].reduce((acc, ph) => {
+    acc.push(...Array(ph[1]).fill(ph[0]));
+    return acc;
+}, []);
+const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+---
+<BaseLayout>
+    <h1>Markdump</h1>
+    <small>{phrase}</small>
+    <hr />
+</BaseLayout>

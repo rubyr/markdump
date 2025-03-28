@@ -1,0 +1,95 @@
+---
+import BaseLayout from '../../layouts/base-layout.astro';
+import { marked } from 'marked';
+import sanitizeHtml from 'sanitize-html';
+import supabase from '../../util/supabase';
+import Timestamp from '../../components/timestamp';
+
+const err = (code: number) => {
+    Astro.response.status = code;
+    Astro.response.statusText =
+        { 404: 'Not found', 500: 'Internal server error' }[code] ?? 'Error';
+    return new Response(null, Astro.response);
+};
+
+const { postid } = Astro.params;
+
+if (!postid) {
+    return err(404);
+}
+
+const { data, error } = await supabase.from('posts').select().eq('id', postid);
+
+if (error || data.length === 0) {
+    return err(404);
+}
+
+if (data.length > 1) {
+    // what the fuck
+    return err(500);
+}
+
+const content = data[0];
+
+const html = sanitizeHtml(await marked.parse(content.body), {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
+});
+---
+
+<BaseLayout>
+    <section class="info">
+        <div class="left">
+            <p><span class="title">{content.title || 'Untitled'}</span> by Anonymous</p>
+            {
+                content.tags?.length ? (
+                    <p>
+                        Tags:{' '}
+                        {content.tags.map((tag, i) => (
+                            <span>
+                                <a href={`/tagged/${tag}`}>{tag}</a>{i < (content.tags?.length || 0) - 1 ? ',' : ''}
+                            </span>
+                        ))}
+                    </p>
+                ) : null
+            }
+        </div>
+        <Timestamp time={content.created_at} />
+    </section>
+    <article class="post-body" set:html={html} />
+</BaseLayout>
+
+<style>
+    section.info {
+        display: flex;
+        justify-content: space-between;
+
+        *:last-child {
+            margin-bottom: 0;
+        }
+
+        .title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+    }
+</style>
+
+<style is:global>
+    /* markdown styles */
+    article.post-body {
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            &:first-child {
+                margin-top: 0;
+            }
+        }
+
+        *:last-child {
+            margin-bottom: 0;
+        }
+    }
+</style>
