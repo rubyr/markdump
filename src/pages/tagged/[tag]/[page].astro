@@ -44,7 +44,7 @@ const { count: total } = await supabase
 const totalPages = Math.ceil((total ?? 1) / RESULTS_PER_PAGE);
 ---
 
-<BaseLayout>
+<BaseLayout title={`tagged "${tag}"`}>
     <h1>tagged "{tag}"</h1>
     <Pagination tag={tag} page={page} totalPages={totalPages} />
     <PostList posts={posts} />

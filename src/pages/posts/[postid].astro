@@ -36,10 +36,7 @@ const html = sanitizeHtml(await marked.parse(content.body), {
     allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
 });
 ---
-<head>
-    <title>{content.title || 'Untitled'} - Markdump</title>
-</head>
-<BaseLayout>
+<BaseLayout title={`${content.title || 'Untitled'}`}>
     <section class="info">
         <div class="left">
             <p class="credit">

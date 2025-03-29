@@ -2,10 +2,11 @@
 import DocRoot from './doc-root.astro';
 import Header from '../components/header.astro';
 import Footer from '../components/footer.astro';
-const { title = 'Markdump' } = Astro.props;
+const { title = '' } = Astro.props;
+const fullTitle = [title, 'Markdump'].join(' - ');
 ---
 
-<DocRoot title={title}>
+<DocRoot title={fullTitle}>
     <Header />
     <main><slot /></main>
     <Footer />
