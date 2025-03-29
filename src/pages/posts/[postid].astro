@@ -49,6 +49,7 @@ const html = sanitizeHtml(await marked.parse(content.body), {
                 {content.unlisted && <small class="unlisted">(Unlisted)</small>}
             </p>
             <TagList tags={content?.tags} />
+            <a href={`/posts/${postid}/raw`}>View Raw</a>
         </div>
         <Timestamp client:only="preact" time={content.created_at} />
     </section>
