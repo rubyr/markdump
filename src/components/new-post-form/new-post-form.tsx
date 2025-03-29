@@ -20,7 +20,7 @@ const NewPostForm = () => {
             setErrors(data.errors);
         }
         if (data.id) {
-            navigate(`/posts/${data.id}`);
+            navigate(`/posts/${data.id}?created`);
         }
     }
     return (

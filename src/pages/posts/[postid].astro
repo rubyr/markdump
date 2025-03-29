@@ -38,10 +38,23 @@ const trimmedText = content.body.slice(0, 100) + (content.body.length > 100 ? '.
 const html = sanitizeHtml(await marked.parse(content.body), {
     allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
 });
+
+const showCopyLinkWarning = Astro.url.searchParams.get('created') !== null;
 ---
 
 <Seo title={content.title} description={trimmedText} />
 <BaseLayout title={`${content.title || 'Untitled'}`}>
+
+    {showCopyLinkWarning && 
+    <section class="attention">
+        <div>
+            <div>Post published successfully!</div>
+            {content.unlisted && <div>Make sure to copy the link so you can get back here.</div>}
+        </div>
+        <button>Copy URL</button>
+    </section>
+    }
+
     <section class="info">
         <div class="left">
             <p class="credit">
@@ -82,6 +95,21 @@ const html = sanitizeHtml(await marked.parse(content.body), {
 
     .post-body {
         word-break: break-word;
+    }
+    
+    section.attention {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        margin-left: 2em;
+        margin-right: 2em;
+
+        background: var(--gradient-info);
+
+        button {
+            background: var(--gradient-success);
+        }
     }
 </style>
 
