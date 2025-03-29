@@ -13,7 +13,7 @@ export interface NewPostErrors {
 export const POST: APIRoute = async ({ request }) => {
     const errors = { title: '', tags: '', body: '', db: '' };
     const data = await request.formData();
-    const title = data.get('title');
+    const title = data.get('title')?.toString().trim();
     const tags = (() => {
         const rawtags = data.get('tags');
         if (!rawtags) return [];
@@ -24,7 +24,7 @@ export const POST: APIRoute = async ({ request }) => {
             .filter((s) => s.length > 0);
         return split;
     })();
-    const bodyRaw = data.get('body')?.toString() ?? '';
+    const bodyRaw = data.get('body')?.toString().trim() ?? '';
     const body = sanitizeHtml(bodyRaw, {
         allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
     });
