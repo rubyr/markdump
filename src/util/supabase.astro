@@ -3,9 +3,8 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from './supabase.types';
 
 export const supabase = () => {
-    console.log(Astro.locals);
-    const url = Astro.locals?.runtime?.env?.SUPABASE_URL || import.meta.env.SUPABASE_URL;
-    const secret = Astro.locals?.runtime?.env?.SUPABASE_SECRET || import.meta.env.SUPABASE_SECRET;
+    const url = import.meta.env.SUPABASE_URL;
+    const secret = import.meta.env.SUPABASE_SECRET;
     return createClient<Database>(url, secret);
 };
 ---

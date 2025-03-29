@@ -10,4 +10,10 @@ export default defineConfig({
   integrations: [preact()],
   output: 'server',
   adapter: cloudflare(),
+  vite: {
+    define: {
+      'process.env.SUPABASE_URL': JSON.stringify(process.env.SUPABASE_URL),
+      'process.env.SUPABASE_SECRET': JSON.stringify(process.env.SUPABASE_SECRET)
+    }
+  }
 });
