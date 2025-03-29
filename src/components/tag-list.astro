@@ -21,14 +21,15 @@ const { tags = [] } = Astro.props;
         display: flex;
         flex-direction: row;
         gap: 2px;
+        flex-wrap: wrap;
     }
     a.tag {
         color: white;
         background-color: var(--secondary);
         padding: 4px;
-        border-radius: 8px;
+        border-radius: var(--border-radius-sm);
         text-decoration: none;
-        font-size: 0.8em;
+        font-size: calc(var(--font-size-base) * 0.8);
     }
     a.tag:hover {
         background-color: white;

@@ -19,7 +19,7 @@ const { data: latest, error } = await supabase()
     .select('id, title, created_at, tags')
     .eq('unlisted', false)
     .order('created_at', { ascending: false })
-    .limit(10);
+    .limit(12);
 ---
 
 <Seo description="A simpler, better way to share markdown." />
