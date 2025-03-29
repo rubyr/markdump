@@ -43,7 +43,7 @@ const totalPages = Math.ceil((total ?? 1) / RESULTS_PER_PAGE);
 
 <BaseLayout title={`tagged "${tag}"`}>
     <h1>tagged "{tag}"</h1>
-    <Pagination tag={tag} page={page} totalPages={totalPages} />
+    {(posts?.length ?? 0) > 4 && <Pagination tag={tag} page={page} totalPages={totalPages} />}
     <PostList posts={posts} />
     <Pagination tag={tag} page={page} totalPages={totalPages} />
 </BaseLayout>

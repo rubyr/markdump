@@ -7,11 +7,12 @@ const { posts } = Astro.props;
 
 {
     posts?.length ? (
-        <ul>
+        <ul class="postList">
             {posts.map((post: { id: any; title: any; created_at: string; tags: string[]; }) => (
-                <li>
-                    <a href={`/posts/${post.id}`}>{post.title || 'Untitled'}</a> by Anonymous
-                    (<Timestamp client:only="preact" time={post.created_at} />)
+                <li class="postListing">
+                    <span><a href={`/posts/${post.id}`}>{post.title || 'Untitled'}</a></span>
+                    <div>by Anonymous</div>
+                    <div class="timestamp"><Timestamp client:only="preact" time={post.created_at} /></div>
                     <TagList tags={post.tags} />
                 </li>
             ))}
@@ -20,3 +21,41 @@ const { posts } = Astro.props;
         <p>(there are no posts. make one?)</p>
     )
 }
+
+<style>
+    ul.postList {
+        width: 100%;
+        display: flex;
+        margin-left: 0;
+        flex-direction: column;
+        padding: 0 var(--spacing-base);
+        gap: calc(var(--spacing-base) / 2);
+    }
+
+    li.postListing {
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+
+        padding: var(--spacing-base);
+
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-md);
+
+        box-shadow: var(--shadow);
+
+        span {
+            width: 100%;
+
+            a {
+                width: auto;
+            }
+        }
+    }
+
+    .timestamp {
+        color: var(--secondary);
+        font-size: calc(var(--font-size-base) * 0.8);
+    }
+</style>
