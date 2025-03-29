@@ -13,7 +13,6 @@
     "@astrojs/preact": "^4.0.7",
     "@supabase/supabase-js": "^2.49.3",
     "astro": "^5.5.5",
-    "dotenv": "^16.4.7",
     "marked": "^15.0.7",
     "preact": "^10.26.4",
     "sanitize-html": "^2.15.0"
