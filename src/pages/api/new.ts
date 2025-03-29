@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import supabase from '../../util/supabase';
+import sanitizeHtml from 'sanitize-html';
 
 export interface NewPostErrors {
     title?: string;
@@ -15,14 +16,17 @@ export const POST: APIRoute = async ({ request }) => {
     const title = data.get('title');
     const tags = (() => {
         const rawtags = data.get('tags');
-        if (!rawtags) return null;
+        if (!rawtags) return [];
         const split = rawtags
             .toString()
             .split(',')
             .map((s) => s.trim());
         return split;
     })();
-    const body = data.get('body');
+    const bodyRaw = data.get('body')?.toString() ?? '';
+    const body = sanitizeHtml(bodyRaw, {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
+    });
     const unlisted = data.get('unlisted') === 'on'; // why.
 
     if (typeof title !== 'string' || title.length >= 256) {
@@ -36,10 +40,10 @@ export const POST: APIRoute = async ({ request }) => {
         // eventually we should split this and check tags individually
         errors.tags = 'tags is too long';
     }
-    if (typeof body !== 'string' || body.length < 1) {
+    if (body.length < 1) {
         errors.body = 'Body is required';
     }
-    if (typeof body !== 'string' || body.length > 500_000) {
+    if (body.length > 500_000) {
         errors.body = 'are you uploading the fucking odyssey? body is too long';
     }
 
