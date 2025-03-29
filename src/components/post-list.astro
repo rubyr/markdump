@@ -10,7 +10,7 @@ const { posts } = Astro.props;
         <ul class="postList">
             {posts.map((post: { id: any; title: any; created_at: string; tags: string[]; }) => (
                 <li class="postListing">
-                    <span><a href={`/posts/${post.id}`}>{post.title || 'Untitled'}</a></span>
+                    <span class="title"><a href={`/posts/${post.id}`}>{post.title || 'Untitled'}</a></span>
                     <div>by Anonymous</div>
                     <div class="timestamp"><Timestamp client:only="preact" time={post.created_at} /></div>
                     <TagList tags={post.tags} />
@@ -45,7 +45,7 @@ const { posts } = Astro.props;
 
         box-shadow: var(--shadow);
 
-        span {
+        span.title {
             width: 100%;
 
             a {
