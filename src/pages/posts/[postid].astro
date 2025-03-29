@@ -50,7 +50,7 @@ const html = sanitizeHtml(await marked.parse(content.body), {
             </p>
             <TagList tags={content?.tags} />
         </div>
-        <Timestamp time={content.created_at} />
+        <Timestamp client:only="preact" time={content.created_at} />
     </section>
     <article class="post-body" set:html={html} />
 </BaseLayout>
