@@ -3,8 +3,9 @@ import BaseLayout from '../layouts/base-layout.astro';
 import { supabase } from '../util/supabase.astro';
 import Timestamp from '../components/timestamp';
 import PostList from '../components/post-list.astro';
+import Seo from '../components/seo.astro';
 const phrases = [
-    ['A simpler, better way to share your docs.', 10],
+    ['A simpler, better way to share markdown.', 10],
     ['Give me all your private documents.', 1],
     ['Feed me, seymour.', 1],
     ['DOC STUCK! DOC STUCK!!! PLEASE!!! I BEG YOU!!!', 1],
@@ -22,6 +23,7 @@ const { data: latest, error } = await supabase()
     .limit(10);
 ---
 
+<Seo title="Markdump" description="A simpler, better way to share markdown." />
 <BaseLayout>
     <small>{phrase}</small>
     <hr />

@@ -5,6 +5,7 @@ import sanitizeHtml from 'sanitize-html';
 import { supabase } from '../../util/supabase.astro';
 import Timestamp from '../../components/timestamp';
 import TagList from '../../components/tag-list.astro';
+import Seo from '../../components/seo.astro';
 
 const err = (code: number) => {
     Astro.response.status = code;
@@ -32,10 +33,14 @@ if (data.length > 1) {
 
 const content = data[0];
 
+const trimmedText = content.body.slice(0, 100) + (content.body.length > 100 ? '...' : '');
+
 const html = sanitizeHtml(await marked.parse(content.body), {
     allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
 });
 ---
+
+<Seo title={content.title} description={trimmedText} />
 <BaseLayout title={`${content.title || 'Untitled'}`}>
     <section class="info">
         <div class="left">
