@@ -1,0 +1,10 @@
+---
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import type { Database } from './supabase.types';
+
+export const supabase = () => {
+    const url = import.meta.env.SUPABASE_URL || Astro.locals?.runtime?.env?.SUPABASE_URL;
+    const secret = import.meta.env.SUPABASE_SECRET || Astro.locals?.runtime?.env?.SUPABASE_SECRET;
+    return createClient<Database>(url, secret);
+};
+---

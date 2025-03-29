@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/base-layout.astro';
-import supabase from '../util/supabase';
+import { supabase } from '../util/supabase.astro';
 import Timestamp from '../components/timestamp';
 import PostList from '../components/post-list.astro';
 const phrases = [
@@ -14,7 +14,7 @@ const phrases = [
 }, []);
 const phrase = phrases[Math.floor(Math.random() * phrases.length)];
 
-const { data: latest, error } = await supabase
+const { data: latest, error } = await supabase()
     .from('posts')
     .select('id, title, created_at, tags')
     .eq('unlisted', false)

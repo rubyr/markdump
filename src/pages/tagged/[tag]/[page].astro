@@ -2,7 +2,7 @@
 import BaseLayout from '../../../layouts/base-layout.astro';
 import { marked } from 'marked';
 import sanitizeHtml from 'sanitize-html';
-import supabase from '../../../util/supabase';
+import { supabase } from '../../../util/supabase.astro';
 import Timestamp from '../../../components/timestamp';
 import Pagination from '../../../components/pagination.astro';
 import PostList from '../../../components/post-list.astro';
@@ -24,7 +24,7 @@ const page = parseInt(pageStr) - 1;
 
 const RESULTS_PER_PAGE = 20;
 
-const { data: posts, error: postsError } = await supabase
+const { data: posts, error: postsError } = await supabase()
     .from('posts')
     .select('title, created_at, tags, id')
     .eq('unlisted', false)
@@ -35,7 +35,7 @@ const { data: posts, error: postsError } = await supabase
         page * RESULTS_PER_PAGE + (RESULTS_PER_PAGE - 1)
     );
 
-const { count: total } = await supabase
+const { count: total } = await supabase()
     .from('posts')
     .select('*', { count: 'exact', head: true })
     .eq('unlisted', false)

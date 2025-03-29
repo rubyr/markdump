@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import supabase from '../../util/supabase';
+import { supabase } from '../../util/supabase.astro';
 import sanitizeHtml from 'sanitize-html';
 
 export interface NewPostErrors {
@@ -54,7 +54,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     // Do something with the data, then return a success response
 
-    const { data: dbData, error } = await supabase
+    const { data: dbData, error } = await supabase()
         .from('posts')
         .insert({
             title,

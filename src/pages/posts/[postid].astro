@@ -2,7 +2,7 @@
 import BaseLayout from '../../layouts/base-layout.astro';
 import { marked } from 'marked';
 import sanitizeHtml from 'sanitize-html';
-import supabase from '../../util/supabase';
+import { supabase } from '../../util/supabase.astro';
 import Timestamp from '../../components/timestamp';
 import TagList from '../../components/tag-list.astro';
 
@@ -19,7 +19,7 @@ if (!postid) {
     return err(404);
 }
 
-const { data, error } = await supabase.from('posts').select().eq('id', postid);
+const { data, error } = await supabase().from('posts').select().eq('id', postid);
 
 if (error || data.length === 0) {
     return err(404);
