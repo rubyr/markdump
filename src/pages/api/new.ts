@@ -20,7 +20,8 @@ export const POST: APIRoute = async ({ request }) => {
         const split = rawtags
             .toString()
             .split(',')
-            .map((s) => s.trim());
+            .map((s) => s.trim())
+            .filter((s) => s.length > 0);
         return split;
     })();
     const bodyRaw = data.get('body')?.toString() ?? '';

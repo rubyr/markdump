@@ -4,14 +4,39 @@ const { tags = [] } = Astro.props;
 
 {
     tags?.length ? (
-        <p>
-            Tags:{' '}
+        <ul class="tagList">
             {tags.map((tag: string, i: number) => (
                 <span>
-                    <a href={`/tagged/${tag}/1`}>{tag}</a>
-                    {i < (tags?.length || 0) - 1 ? ', ' : ''}
+                    <a class='tag' href={`/tagged/${tag}/1`}>#{tag}</a>
                 </span>
             ))}
-        </p>
+        </ul>
     ) : null
 }
+
+<style>
+    ul.tagList {
+        margin: 0 !important;
+        padding: 0 !important;
+        display: flex;
+        flex-direction: row;
+        gap: 2px;
+        flex-wrap: wrap;
+    }
+    a.tag {
+        color: white;
+        background-color: var(--secondary);
+        padding: 4px;
+        border-radius: var(--border-radius-sm);
+        text-decoration: none;
+        font-size: calc(var(--font-size-base) * 0.8);
+    }
+    a.tag:hover {
+        background-color: white;
+        color: var(--secondary);
+    }
+    a.tag::before {
+        /* Hide the classless thing */
+        background: none;
+    }
+</style>
