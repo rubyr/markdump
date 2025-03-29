@@ -40,7 +40,10 @@ const html = sanitizeHtml(await marked.parse(content.body), {
 <BaseLayout>
     <section class="info">
         <div class="left">
-            <p><span class="title">{content.title || 'Untitled'}</span> by Anonymous</p>
+            <p class="credit">
+                <span class="title">{content.title || 'Untitled'}</span> by Anonymous
+                {content.unlisted && <small class="unlisted">(Unlisted)</small>}
+            </p>
             <TagList tags={content?.tags} />
         </div>
         <Timestamp time={content.created_at} />
@@ -60,6 +63,11 @@ const html = sanitizeHtml(await marked.parse(content.body), {
         .title {
             font-size: 1.5rem;
             font-weight: 700;
+            margin-bottom: 0;
+        }
+
+        .unlisted {
+            opacity: 0.5;
         }
     }
 </style>
