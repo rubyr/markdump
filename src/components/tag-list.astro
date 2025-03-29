@@ -1,0 +1,17 @@
+---
+const { tags = [] } = Astro.props;
+---
+
+{
+    tags?.length ? (
+        <p>
+            Tags:{' '}
+            {tags.map((tag: string, i: number) => (
+                <span>
+                    <a href={`/tagged/${tag}/1`}>{tag}</a>
+                    {i < (tags?.length || 0) - 1 ? ', ' : ''}
+                </span>
+            ))}
+        </p>
+    ) : null
+}

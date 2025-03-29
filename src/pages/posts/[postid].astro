@@ -4,6 +4,7 @@ import { marked } from 'marked';
 import sanitizeHtml from 'sanitize-html';
 import supabase from '../../util/supabase';
 import Timestamp from '../../components/timestamp';
+import TagList from '../../components/tag-list.astro';
 
 const err = (code: number) => {
     Astro.response.status = code;
@@ -40,18 +41,7 @@ const html = sanitizeHtml(await marked.parse(content.body), {
     <section class="info">
         <div class="left">
             <p><span class="title">{content.title || 'Untitled'}</span> by Anonymous</p>
-            {
-                content.tags?.length ? (
-                    <p>
-                        Tags:{' '}
-                        {content.tags.map((tag, i) => (
-                            <span>
-                                <a href={`/tagged/${tag}`}>{tag}</a>{i < (content.tags?.length || 0) - 1 ? ',' : ''}
-                            </span>
-                        ))}
-                    </p>
-                ) : null
-            }
+            <TagList tags={content?.tags} />
         </div>
         <Timestamp time={content.created_at} />
     </section>

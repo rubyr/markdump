@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../../../layouts/base-layout.astro';
+import { marked } from 'marked';
+import sanitizeHtml from 'sanitize-html';
+import supabase from '../../../util/supabase';
+import Timestamp from '../../../components/timestamp';
+import Pagination from '../../../components/pagination.astro';
+import PostList from '../../../components/post-list.astro';
+
+const err = (code: number) => {
+    Astro.response.status = code;
+    Astro.response.statusText =
+        { 404: 'Not found', 500: 'Internal server error' }[code] ?? 'Error';
+    return new Response(null, Astro.response);
+};
+
+const { tag, page: pageStr = '1' } = Astro.params;
+
+if (!tag) {
+    return err(404);
+}
+
+const page = parseInt(pageStr) - 1;
+
+const RESULTS_PER_PAGE = 20;
+
+const { data: posts, error: postsError } = await supabase
+    .from('posts')
+    .select('title, created_at, tags, id')
+    .eq('unlisted', false)
+    .contains('tags', [tag])
+    .order('created_at', { ascending: false })
+    .range(
+        page * RESULTS_PER_PAGE,
+        page * RESULTS_PER_PAGE + (RESULTS_PER_PAGE - 1)
+    );
+
+const { count: total } = await supabase
+    .from('posts')
+    .select('*', { count: 'exact', head: true })
+    .eq('unlisted', false)
+    .contains('tags', [tag]);
+
+const totalPages = Math.ceil((total ?? 1) / RESULTS_PER_PAGE);
+---
+
+<BaseLayout>
+    <h1>tagged "{tag}"</h1>
+    <Pagination tag={tag} page={page} totalPages={totalPages} />
+    <PostList posts={posts} />
+    <Pagination tag={tag} page={page} totalPages={totalPages} />
+</BaseLayout>

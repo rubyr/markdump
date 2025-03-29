@@ -1,0 +1,22 @@
+---
+import TagList from "./tag-list.astro";
+import Timestamp from "./timestamp";
+
+const { posts } = Astro.props;
+---
+
+{
+    posts?.length ? (
+        <ul>
+            {posts.map((post: { id: any; title: any; created_at: string; tags: string[]; }) => (
+                <li>
+                    <a href={`/posts/${post.id}`}>{post.title || 'Untitled'}</a> by Anonymous
+                    (<Timestamp time={post.created_at} />)
+                    <TagList tags={post.tags} />
+                </li>
+            ))}
+        </ul>
+    ) : (
+        <p>(there are no posts. make one?)</p>
+    )
+}

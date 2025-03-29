@@ -1,0 +1,15 @@
+---
+const { tag, page, totalPages } = Astro.props;
+---
+<div class="pagination">
+    {page > 0 && <a href={`/tagged/${tag}/${page}`}>&lt;</a>}
+    <p>Page {page + 1} / {totalPages}</p>
+    {page < totalPages - 1 && <a href={`/tagged/${tag}/${page + 2}`}>&gt;</a>}
+</div>
+
+<style>
+    .pagination {
+        display: flex;
+        gap: 0.5rem;
+    }
+</style>
