@@ -1,10 +1,20 @@
 ---
-import DocRoot from "./doc-root.astro";
-import Header from "../components/header.astro";
-const { title = "Markdump" } = Astro.props;
+import DocRoot from './doc-root.astro';
+import Header from '../components/header.astro';
+import Footer from '../components/footer.astro';
+const { title = 'Markdump' } = Astro.props;
 ---
 
 <DocRoot title={title}>
     <Header />
-    <slot />
+    <main><slot /></main>
+    <Footer />
 </DocRoot>
+
+<style is:global>
+    body {
+        min-height: 100vh;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+    }
+</style>
