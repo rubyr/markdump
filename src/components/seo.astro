@@ -1,8 +1,9 @@
 ---
 const { title, description } = Astro.props;
+const titleText = title ? `${title} - Markdump` : 'Markdump';
 ---
 
 <head>
-    {title && <meta property="og:title" content={`${title} - Markdump`} />}
+    {title && <meta property="og:title" content={titleText} />}
     {description && <meta property="og:description" content={description} />}
 </head>
