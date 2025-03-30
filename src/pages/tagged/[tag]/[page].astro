@@ -3,6 +3,7 @@ import BaseLayout from '../../../layouts/base-layout.astro';
 import { supabase } from '../../../util/supabase.astro';
 import Pagination from '../../../components/pagination.astro';
 import PostList from '../../../components/post-list.astro';
+import Seo from '../../../components/seo.astro';
 
 const err = (code: number) => {
     Astro.response.status = code;
@@ -41,6 +42,7 @@ const { count: total } = await supabase()
 const totalPages = Math.ceil((total ?? 1) / RESULTS_PER_PAGE);
 ---
 
+<Seo title='Markdump' description={`All posts tagged #${tag}`} />
 <BaseLayout title={`tagged "${tag}"`}>
     <h1>tagged "{tag}"</h1>
     {(posts?.length ?? 0) > 4 && <Pagination tag={tag} page={page} totalPages={totalPages} />}
