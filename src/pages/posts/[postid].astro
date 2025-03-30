@@ -40,6 +40,7 @@ const html = sanitizeHtml(await marked.parse(content.body), {
 });
 
 const showCopyLinkWarning = Astro.url.searchParams.get('created') !== null;
+const url = Astro.url.href;
 ---
 
 <Seo title={content.title} description={trimmedText} />
@@ -49,9 +50,9 @@ const showCopyLinkWarning = Astro.url.searchParams.get('created') !== null;
     <section class="attention">
         <div>
             <div>Post published successfully!</div>
-            {content.unlisted && <div>Make sure to copy the link so you can get back here.</div>}
+            {content.unlisted && <div>This post is <em>unlisted</em> - make sure to copy the link so you can get back here.</div>}
         </div>
-        <button>Copy URL</button>
+        <button id="copyURL">Copy URL</button>
     </section>
     }
 
@@ -68,6 +69,22 @@ const showCopyLinkWarning = Astro.url.searchParams.get('created') !== null;
     </section>
     <article class="post-body" set:html={html} />
 </BaseLayout>
+
+<script>
+    const btn = document.getElementById('copyURL');
+    let restoreTextInterval : NodeJS.Timeout;
+    btn?.addEventListener('click',() => {
+        navigator.clipboard.writeText(window.location.href.split('?')[0]);
+        const originalText = btn.innerText;
+        btn.innerText = 'Copied!';
+        if (restoreTextInterval) {
+            clearInterval(restoreTextInterval);
+        }
+        restoreTextInterval = setInterval(() => {
+            btn.innerText = originalText;
+        }, 1000);
+    })
+</script>
 
 <style>
     section.info {
@@ -105,7 +122,7 @@ const showCopyLinkWarning = Astro.url.searchParams.get('created') !== null;
         margin-left: 2em;
         margin-right: 2em;
 
-        background: var(--gradient-info);
+        background: var(--gradient-secondary);
 
         button {
             background: var(--gradient-success);
