@@ -1,9 +1,9 @@
 ---
-import BaseLayout from '../../../layouts/base-layout.astro';
-import { supabase } from '../../../util/supabase.astro';
-import Pagination from '../../../components/pagination.astro';
-import PostList from '../../../components/post-list.astro';
-import Seo from '../../../components/seo.astro';
+import BaseLayout from '../../layouts/base-layout.astro';
+import { supabase } from '../../util/supabase.astro';
+import Pagination from '../../components/pagination.astro';
+import PostList from '../../components/post-list.astro';
+import Seo from '../../components/seo.astro';
 
 const err = (code: number) => {
     Astro.response.status = code;
@@ -12,13 +12,14 @@ const err = (code: number) => {
     return new Response(null, Astro.response);
 };
 
-const { tag, page: pageStr = '1' } = Astro.params;
+const { tag } = Astro.params;
+const pageStr = Astro.url.searchParams.get('p') ?? '1';
 
 if (!tag) {
     return err(404);
 }
 
-const page = parseInt(pageStr) - 1;
+const pageIndex = (parseInt(pageStr) || 1) - 1;
 
 const RESULTS_PER_PAGE = 20;
 
@@ -29,8 +30,8 @@ const { data: posts, error: postsError } = await supabase()
     .contains('tags', [tag])
     .order('created_at', { ascending: false })
     .range(
-        page * RESULTS_PER_PAGE,
-        page * RESULTS_PER_PAGE + (RESULTS_PER_PAGE - 1)
+        pageIndex * RESULTS_PER_PAGE,
+        pageIndex * RESULTS_PER_PAGE + (RESULTS_PER_PAGE - 1)
     );
 
 const { count: total } = await supabase()
@@ -45,7 +46,7 @@ const totalPages = Math.ceil((total ?? 1) / RESULTS_PER_PAGE);
 <Seo description={`All posts tagged #${tag}`} />
 <BaseLayout title={`tagged "${tag}"`}>
     <h1>tagged "{tag}"</h1>
-    {(posts?.length ?? 0) > 4 && <Pagination tag={tag} page={page} totalPages={totalPages} />}
+    {(posts?.length ?? 0) > 4 && <Pagination page={pageIndex} totalPages={totalPages} />}
     <PostList posts={posts} />
-    <Pagination tag={tag} page={page} totalPages={totalPages} />
+    <Pagination page={pageIndex} totalPages={totalPages} />
 </BaseLayout>

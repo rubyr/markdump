@@ -1,12 +1,17 @@
 ---
-const { tag, page, totalPages } = Astro.props;
+const { page, totalPages } = Astro.props;
+const getPageURL = (page:number) => {
+    const url = new URL(Astro.url);
+    url.searchParams.set('p', page.toString());
+    return url;
+}
 ---
 <div class="pagination">
-    {page > 0 && <a href={`/tagged/${tag}/0`}>&lt;&lt;</a>}
-    {page > 0 && <a href={`/tagged/${tag}/${page}`}>&lt;</a>}
+    {page > 0 && <a href={getPageURL(0)}>&lt;&lt;</a>}
+    {page > 0 && <a href={getPageURL(page)}>&lt;</a>}
     <p>Page {page + 1} / {totalPages}</p>
-    {page < totalPages - 1 && <a href={`/tagged/${tag}/${page + 2}`}>&gt;</a>}
-    {page < totalPages - 1 && <a href={`/tagged/${tag}/${totalPages}}`}>&gt;&gt;</a>}
+    {page < totalPages - 1 && <a href={getPageURL(page+2)}>&gt;</a>}
+    {page < totalPages - 1 && <a href={getPageURL(totalPages)}>&gt;&gt;</a>}
 </div>
 
 <style>
