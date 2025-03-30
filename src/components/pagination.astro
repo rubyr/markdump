@@ -1,10 +1,11 @@
 ---
-const { page, totalPages } = Astro.props;
+const { page, _totalPages } = Astro.props;
 const getPageURL = (page:number) => {
     const url = new URL(Astro.url);
     url.searchParams.set('p', page.toString());
     return url;
 }
+const totalPages = Math.min(_totalPages, 1);
 ---
 <div class="pagination">
     {page > 0 && <a href={getPageURL(0)}>&lt;&lt;</a>}
