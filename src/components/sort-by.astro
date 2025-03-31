@@ -1,0 +1,44 @@
+<div class="sortContainer">
+    <label for="sort">Sort By</label>
+    <select name="sort" id="sortSelect">
+        <option value="newest">Newest</option>
+        <option value="oldest">Oldest</option>
+        <option value="alpha">Alphabetical</option>
+    </select>
+</div>
+
+<script>
+    const sortSelect = document.getElementById('sortSelect') as HTMLSelectElement;
+
+    const currentOption = new URLSearchParams(window.location.search).get('sort');
+    if (currentOption) {
+        (sortSelect.querySelector(`option[value=${currentOption}]`) as HTMLOptionElement).selected = true;
+    }
+
+    sortSelect?.addEventListener('change',(e) => {
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set('sort',sortSelect.value);
+        window.location.search = searchParams.toString();
+    });
+</script>
+
+<style>
+    .sortContainer {
+        display: flex;
+        flex-direction: row;
+        justify-content: right;
+        gap: var(--spacing-base);
+        margin-bottom: var(--spacing-base);
+
+        select {
+            width: auto;
+            margin: 0;
+        }
+        label {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+    }
+</style>
