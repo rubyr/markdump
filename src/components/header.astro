@@ -3,6 +3,9 @@
         <a href="/" class="title"># <span class="underline">Markdum</span>p</a>
     </div>
     <div class="right">
+        <form action="/search" id="search-form">
+            <input type="search" name="q" placeholder="Search for posts" autocomplete="off" aria-label="Search"/>
+        </form>
         <a class="new-post" href="/new">+ new</a>
     </div>
 </header>
@@ -17,6 +20,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            gap: var(--spacing-base);
         }
     }
 
@@ -33,15 +37,27 @@
         }
     }
 
+    .left, .right {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+    }
+
     .new-post {
         padding: 0.25rem 0.5rem;
         min-width: 0;
         background: var(--gradient-success);
         color: #fff;
         border-radius: 0.25rem;
+        display: flex;
+        align-items: center;
 
         &::before {
             opacity: 0;
         }
+    }
+
+    input[name="q"] {
+        margin: 0;
     }
 </style>
