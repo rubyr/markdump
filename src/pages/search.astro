@@ -4,7 +4,7 @@ import { supabase } from '../util/supabase.astro';
 import Pagination from '../components/pagination.astro';
 import PostList from '../components/post-list.astro';
 import Seo from '../components/seo.astro';
-import SortBy from '../components/sort-by.astro';
+import SortBy, { sortPostQuery } from '../components/sort-by.astro';
 
 const err = (code: number) => {
     Astro.response.status = code;
@@ -22,13 +22,13 @@ const sortBy = Astro.url.searchParams.get('sort') ?? 'newest';
 
 const RESULTS_PER_PAGE = 20;
 
-const { data: posts, error: postsError } = await supabase()
+let dbQuery = supabase()
     .from('posts')
     .select('title, created_at, tags, id')
     .eq('unlisted', false)
     .ilike('title', `%${query}%`) // TODO: this is far from a robust search system
-    .order('created_at', { ascending: false })
-    .range(
+sortPostQuery(dbQuery, sortBy);
+const { data: posts, error: postsError } = await dbQuery.range(
         pageIndex * RESULTS_PER_PAGE,
         pageIndex * RESULTS_PER_PAGE + (RESULTS_PER_PAGE - 1)
     );

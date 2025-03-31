@@ -1,9 +1,31 @@
+---
+export const sortPostQuery = (query:any, sortBy: string) => {
+    switch (sortBy) {
+        default:
+        case 'newest':
+            query = query.order('created_at', { ascending: false });
+            break;
+        case 'oldest':
+            query = query.order('created_at', { ascending: true });
+            break;
+        case 'alpha':
+            query = query.order('title', { ascending: true });
+            break;
+        case 'revalpha':
+            query = query.order('title', { ascending: false });
+            break;
+    }
+    return query;
+}
+---
+
 <div class="sortContainer">
     <label for="sort">Sort By</label>
     <select name="sort" id="sortSelect">
         <option value="newest">Newest</option>
         <option value="oldest">Oldest</option>
-        <option value="alpha">Alphabetical</option>
+        <option value="alpha">Title (A-Z)</option>
+        <option value="revalpha">Title (Z-A)</option>
     </select>
 </div>
 

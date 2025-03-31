@@ -4,6 +4,7 @@ import { supabase } from '../../util/supabase.astro';
 import Pagination from '../../components/pagination.astro';
 import PostList from '../../components/post-list.astro';
 import Seo from '../../components/seo.astro';
+import { sortPostQuery } from '../../components/sort-by.astro';
 
 const err = (code: number) => {
     Astro.response.status = code;
@@ -14,6 +15,7 @@ const err = (code: number) => {
 
 const { tag } = Astro.params;
 const pageStr = Astro.url.searchParams.get('p') ?? '1';
+const sortBy = Astro.url.searchParams.get('sort') ?? 'newest';
 
 if (!tag) {
     return err(404);
@@ -23,13 +25,13 @@ const pageIndex = (parseInt(pageStr) || 1) - 1;
 
 const RESULTS_PER_PAGE = 20;
 
-const { data: posts, error: postsError } = await supabase()
+let dbQuery = supabase()
     .from('posts')
     .select('title, created_at, tags, id')
     .eq('unlisted', false)
-    .contains('tags', [tag])
-    .order('created_at', { ascending: false })
-    .range(
+    .contains('tags', [tag]);
+sortPostQuery(dbQuery, sortBy);
+const { data: posts, error: postsError } = await dbQuery.range(
         pageIndex * RESULTS_PER_PAGE,
         pageIndex * RESULTS_PER_PAGE + (RESULTS_PER_PAGE - 1)
     );
