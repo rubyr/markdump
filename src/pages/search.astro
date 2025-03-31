@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../layouts/base-layout.astro';
+import { supabase } from '../util/supabase.astro';
+import Pagination from '../components/pagination.astro';
+import PostList from '../components/post-list.astro';
+import Seo from '../components/seo.astro';
+
+const err = (code: number) => {
+    Astro.response.status = code;
+    Astro.response.statusText =
+        { 404: 'Not found', 500: 'Internal server error' }[code] ?? 'Error';
+    return new Response(null, Astro.response);
+};
+
+const query = Astro.url.searchParams.get('q') ?? '';
+
+const pageStr = Astro.url.searchParams.get('p') ?? '1';
+const pageIndex = (parseInt(pageStr) || 1) - 1;
+
+const RESULTS_PER_PAGE = 20;
+
+const { data: posts, error: postsError } = await supabase()
+    .from('posts')
+    .select('title, created_at, tags, id')
+    .eq('unlisted', false)
+    .ilike('title', `%${query}%`) // TODO: this is far from a robust search system
+    .order('created_at', { ascending: false })
+    .range(
+        pageIndex * RESULTS_PER_PAGE,
+        pageIndex * RESULTS_PER_PAGE + (RESULTS_PER_PAGE - 1)
+    );
+
+const { count: total } = await supabase()
+    .from('posts')
+    .select('*', { count: 'exact', head: true })
+    .eq('unlisted', false)
+    .ilike('title', `%${query}%`)
+
+const totalPages = Math.ceil((total ?? 1) / RESULTS_PER_PAGE);
+---
+
+<Seo title='Markdump' description={`Search for ${query}`} />
+<BaseLayout title={`Search "${query}"`}>
+    {query.length > 0 && <h1>Search results for "{query}"</h1>}
+    {query.length == 0 && <h1>All posts</h1>}
+    {(posts?.length ?? 0) > 4 && <Pagination page={pageIndex} totalPages={totalPages} />}
+    <PostList posts={posts} />
+    <Pagination page={pageIndex} totalPages={totalPages}/>
+</BaseLayout>
