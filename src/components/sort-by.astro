@@ -1,31 +1,40 @@
 ---
-export const sortPostQuery = (query:any, sortBy: string) => {
-    switch (sortBy) {
-        default:
-        case 'newest':
-            query = query.order('created_at', { ascending: false });
-            break;
-        case 'oldest':
-            query = query.order('created_at', { ascending: true });
-            break;
-        case 'alpha':
-            query = query.order('title', { ascending: true });
-            break;
-        case 'revalpha':
-            query = query.order('title', { ascending: false });
-            break;
+export const sortOptions = {
+    newest: {
+        name: 'Newest',
+        col: 'created_at',
+        ascending: false,
+    },
+    oldest: {
+        name: 'Oldest',
+        col: 'created_at',
+        ascending: true,
+    },
+    alpha: {
+        name: 'Title (A-Z)',
+        col: 'title',
+        ascending: true,
+    },
+    revalpha: {
+        name: 'Title (Z-A)',
+        col: 'title',
+        ascending: false,
     }
-    return query;
+}
+export type SortType = keyof typeof sortOptions;
+
+export const sortPostQuery = (query:any, sortBy: SortType) => {
+    const {col,ascending} = sortOptions[sortBy] ?? sortOptions.newest;
+    return query.order(col, { ascending });
 }
 ---
 
 <div class="sortContainer">
     <label for="sort">Sort By</label>
     <select name="sort" id="sortSelect">
-        <option value="newest">Newest</option>
-        <option value="oldest">Oldest</option>
-        <option value="alpha">Title (A-Z)</option>
-        <option value="revalpha">Title (Z-A)</option>
+        {Object.keys(sortOptions).map(key => {
+            return <option value={key}>{sortOptions[key as SortType].name}</option>
+        })}
     </select>
 </div>
 
