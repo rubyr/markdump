@@ -18,7 +18,12 @@ const PostForm = ({ onSubmit, errors, data, children }: PostFormProps) => {
             <section>
                 <label>
                     Title (optional)
-                    <input type="text" name="title" placeholder="cool post" value={data?.title} />
+                    <input
+                        type="text"
+                        name="title"
+                        placeholder="cool post"
+                        value={data?.title}
+                    />
                 </label>
                 {errors.title && <p class={styles.error}>{errors.title}</p>}
                 <label>
@@ -38,12 +43,18 @@ const PostForm = ({ onSubmit, errors, data, children }: PostFormProps) => {
                         required
                         minlength={1}
                         placeholder="# hello, world!"
-                    >{data?.body}</textarea>
+                    >
+                        {data?.body}
+                    </textarea>
                 </label>
                 {errors.body && <p class={styles.error}>{errors.body}</p>}
                 <label>
-                    <input type="checkbox" name="unlisted" checked={data?.unlisted || true} /> Unlisted
-                    (exclude this from search results)
+                    <input
+                        type="checkbox"
+                        name="unlisted"
+                        checked={data?.unlisted || true}
+                    />{' '}
+                    Unlisted (exclude this from search results)
                 </label>
                 {children}
                 <button class="success">Submit</button>
@@ -77,11 +88,11 @@ const NewPostForm = () => {
 const EditPostForm = ({
     postId,
     editKey,
-    postData
+    postData,
 }: {
     postId: string;
     editKey: string;
-    postData: PostData
+    postData: PostData;
 }) => {
     const [errors, setErrors] = useState<NewPostErrors>({});
 
@@ -98,14 +109,16 @@ const EditPostForm = ({
             setErrors(data.errors);
         }
         if (data.id) {
-            navigate(`/posts/${data.id}?created`);
+            navigate(`/posts/${data.id}?created=${data.edit_key}`);
         }
     }
 
-    return <PostForm onSubmit={submit} errors={errors} data={postData}>
-        <input hidden name="post_id" value={postId} />
-        <input hidden name="edit_key" value={editKey} />
-    </PostForm>;
+    return (
+        <PostForm onSubmit={submit} errors={errors} data={postData}>
+            <input hidden name="post_id" value={postId} />
+            <input hidden name="edit_key" value={editKey} />
+        </PostForm>
+    );
 };
 
 export { NewPostForm, EditPostForm };
