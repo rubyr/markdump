@@ -1,0 +1,38 @@
+---
+import { EditPostForm } from '../../../components/new-post-form/post-form';
+import Seo from '../../../components/seo.astro';
+import BaseLayout from '../../../layouts/base-layout.astro';
+import { supabase } from '../../../util/supabase.astro';
+
+const err = (code: number) => {
+    Astro.response.status = code;
+    Astro.response.statusText =
+        { 400: 'Bad request', 404: 'Not found', 500: 'Internal server error' }[
+            code
+        ] ?? 'Error';
+    return new Response(null, Astro.response);
+};
+
+const editKey = Astro.url.searchParams.get('key');
+const { postid } = Astro.params;
+
+if (!postid) {
+    return err(404);
+}
+
+const { data: postInfo, error } = await supabase()
+    .from('posts')
+    .select()
+    .eq('id', postid)
+    .single();
+
+if (error || !editKey || editKey !== postInfo?.edit_key) {
+    return err(400);
+}
+---
+
+<Seo title="Edit Post" />
+<BaseLayout title="Edit">
+    <h1>Edit post</h1>
+    <EditPostForm client:load postId={postInfo.id} editKey={editKey} postData={postInfo} />
+</BaseLayout>
