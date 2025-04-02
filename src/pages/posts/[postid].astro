@@ -43,9 +43,8 @@ const showCopyLinkWarning = Astro.url.searchParams.get('created') !== null;
 const url = Astro.url.href;
 ---
 
-<Seo title={content.title} description={trimmedText} />
 <BaseLayout title={`${content.title || 'Untitled'}`}>
-
+    <Seo title={content.title} description={trimmedText} />
     {showCopyLinkWarning && 
     <section class="attention">
         <div>

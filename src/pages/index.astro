@@ -22,8 +22,8 @@ const { data: latest, error } = await supabase()
     .limit(10);
 ---
 
-<Seo description="A simpler, better way to share markdown." />
 <BaseLayout>
+    <Seo description="A simpler, better way to share markdown." />
     <small>{phrase}</small>
     <hr />
     <h2>Latest posts</h2>
