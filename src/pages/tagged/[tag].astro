@@ -4,7 +4,7 @@ import { supabase } from '../../util/supabase.astro';
 import Pagination from '../../components/pagination.astro';
 import PostList from '../../components/post-list.astro';
 import Seo from '../../components/seo.astro';
-import { sortPostQuery } from '../../components/sort-by.astro';
+import SortBy, { sortPostQuery, type SortType } from '../../components/sort-by/sort-by';
 
 const err = (code: number) => {
     Astro.response.status = code;
@@ -30,7 +30,7 @@ let dbQuery = supabase()
     .select('title, created_at, tags, id')
     .eq('unlisted', false)
     .contains('tags', [tag]);
-sortPostQuery(dbQuery, sortBy);
+sortPostQuery(dbQuery, sortBy as SortType);
 const { data: posts, error: postsError } = await dbQuery.range(
         pageIndex * RESULTS_PER_PAGE,
         pageIndex * RESULTS_PER_PAGE + (RESULTS_PER_PAGE - 1)
@@ -48,6 +48,7 @@ const totalPages = Math.ceil((total ?? 1) / RESULTS_PER_PAGE);
 <Seo description={`All posts tagged #${tag}`} />
 <BaseLayout title={`tagged "${tag}"`}>
     <h1>tagged "{tag}"</h1>
+    <SortBy client:only="preact"/>
     {(posts?.length ?? 0) > 4 && <Pagination page={pageIndex} totalPages={totalPages} />}
     <PostList posts={posts} />
     <Pagination page={pageIndex} totalPages={totalPages} />
