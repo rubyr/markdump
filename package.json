@@ -6,7 +6,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "regen_db_types": "npx supabase gen types typescript --project-id \"tuiteizpgdxygfbidcrb\" --schema public > ./src/util/supabase.types.ts"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.3.1",

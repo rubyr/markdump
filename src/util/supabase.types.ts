@@ -11,24 +11,33 @@ export type Database = {
     Tables: {
       posts: {
         Row: {
+          adult_content: boolean
           body: string
           created_at: string
+          edit_key: string | null
+          edited_at: string | null
           id: string
           tags: string[] | null
           title: string | null
           unlisted: boolean
         }
         Insert: {
+          adult_content?: boolean
           body: string
           created_at?: string
+          edit_key?: string | null
+          edited_at?: string | null
           id?: string
           tags?: string[] | null
           title?: string | null
           unlisted?: boolean
         }
         Update: {
+          adult_content?: boolean
           body?: string
           created_at?: string
+          edit_key?: string | null
+          edited_at?: string | null
           id?: string
           tags?: string[] | null
           title?: string | null
@@ -41,7 +50,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_uid: {
+        Args: {
+          size: number
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
