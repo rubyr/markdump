@@ -1,5 +1,5 @@
 ---
-import { EditPostForm } from '../../../components/new-post-form/post-form';
+import { EditPostForm } from '../../../components/post-form/post-form';
 import Seo from '../../../components/seo.astro';
 import BaseLayout from '../../../layouts/base-layout.astro';
 import { supabase } from '../../../util/supabase.astro';
@@ -34,5 +34,10 @@ if (error || !editKey || editKey !== postInfo?.edit_key) {
 <Seo title="Edit Post" />
 <BaseLayout title="Edit">
     <h1>Edit post</h1>
-    <EditPostForm client:load postId={postInfo.id} editKey={editKey} postData={postInfo} />
+    <EditPostForm
+        client:load
+        postId={postInfo.id}
+        editKey={editKey}
+        postData={postInfo}
+    />
 </BaseLayout>
