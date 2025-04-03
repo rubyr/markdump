@@ -3,7 +3,7 @@ import BaseLayout from '../../layouts/base-layout.astro';
 import { marked } from 'marked';
 import sanitizeHtml from 'sanitize-html';
 import { supabase } from '../../util/supabase.astro';
-import Timestamp from '../../components/timestamp';
+import Timestamp from '../../components/timestamp/timestamp';
 import TagList from '../../components/tag-list.astro';
 import Seo from '../../components/seo.astro';
 import CopyToClipboard from '../../components/copy-to-clipboard';
@@ -96,6 +96,7 @@ const editURL = url + `/edit?key=${content.edit_key}`;
                 )
             }
             <span><a href={`/posts/${postid}/raw`} download={`${content.title}.md`}>Download</a></span>
+            {content.adult_content || <div>Marked as 18+</div>}
         </div>
     </section>
     <article class="post-body" set:html={html} />
@@ -112,6 +113,10 @@ const editURL = url + `/edit?key=${content.edit_key}`;
 
         p.credit {
             margin-bottom: 0;
+        }
+
+        .right {
+            text-align: right;
         }
 
         .title {

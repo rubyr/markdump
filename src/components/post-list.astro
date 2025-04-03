@@ -1,6 +1,6 @@
 ---
 import TagList from "./tag-list.astro";
-import Timestamp from "./timestamp";
+import Timestamp from "./timestamp/timestamp";
 
 const { posts } = Astro.props;
 ---
@@ -13,11 +13,11 @@ const { posts } = Astro.props;
                     <div class="left">
                         <span class="title"><a href={`/posts/${post.id}`}>{post.title || 'Untitled'}</a></span>
                         <div>by Anonymous</div>
+                        <TagList tags={post.tags} />
                     </div>
                     <div class="right">
-                        <div class="timestamp"><Timestamp client:only="preact" time={post.created_at} /></div>
-                        <TagList tags={post.tags} />
-                        {post.adult_content || <div>This post is flagged as 18+</div>}
+                        <Timestamp client:only="preact" time={post.created_at} />
+                        {post.adult_content && <div>This post is flagged as 18+</div>}
                     </div>
                 </li>
             ))}
@@ -63,13 +63,7 @@ const { posts } = Astro.props;
             flex-direction: column;
         }
         .right {
-            justify-content: flex-end;
             text-align: right;
         }
-    }
-
-    .timestamp {
-        color: var(--secondary);
-        font-size: calc(var(--font-size-base) * 0.8);
     }
 </style>
