@@ -1,0 +1,18 @@
+.sortContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    gap: var(--spacing-base);
+    margin-bottom: var(--spacing-base);
+
+    select {
+        width: auto;
+        margin: 0;
+    }
+    label {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+    }
+}
