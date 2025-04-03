@@ -8,12 +8,17 @@ const { posts } = Astro.props;
 {
     posts?.length ? (
         <ul class="postList">
-            {posts.map((post: { id: any; title: any; created_at: string; tags: string[]; }) => (
+            {posts.map((post: { id: any; title: any; created_at: string; tags: string[]; adult_content: boolean }) => (
                 <li class="postListing">
-                    <span class="title"><a href={`/posts/${post.id}`}>{post.title || 'Untitled'}</a></span>
-                    <div>by Anonymous</div>
-                    <div class="timestamp"><Timestamp client:only="preact" time={post.created_at} /></div>
-                    <TagList tags={post.tags} />
+                    <div class="left">
+                        <span class="title"><a href={`/posts/${post.id}`}>{post.title || 'Untitled'}</a></span>
+                        <div>by Anonymous</div>
+                    </div>
+                    <div class="right">
+                        <div class="timestamp"><Timestamp client:only="preact" time={post.created_at} /></div>
+                        <TagList tags={post.tags} />
+                        {post.adult_content || <div>This post is flagged as 18+</div>}
+                    </div>
                 </li>
             ))}
         </ul>
@@ -35,7 +40,8 @@ const { posts } = Astro.props;
     li.postListing {
         text-decoration: none;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        justify-content: space-between;
 
         padding: var(--spacing-base);
 
@@ -51,6 +57,14 @@ const { posts } = Astro.props;
             a {
                 width: auto;
             }
+        }
+        .left, .right {
+            display: flex;
+            flex-direction: column;
+        }
+        .right {
+            justify-content: flex-end;
+            text-align: right;
         }
     }
 

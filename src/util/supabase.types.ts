@@ -20,6 +20,7 @@ export type Database = {
           tags: string[] | null
           title: string | null
           unlisted: boolean
+          adult_content: boolean
         }
         Insert: {
           adult_content?: boolean
@@ -31,6 +32,7 @@ export type Database = {
           tags?: string[] | null
           title?: string | null
           unlisted?: boolean
+          adult_content?: boolean
         }
         Update: {
           adult_content?: boolean
@@ -42,6 +44,7 @@ export type Database = {
           tags?: string[] | null
           title?: string | null
           unlisted?: boolean
+          adult_content?: boolean
         }
         Relationships: []
       }
