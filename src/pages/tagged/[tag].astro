@@ -4,13 +4,7 @@ import { supabase } from '../../util/supabase.astro';
 import Pagination from '../../components/pagination.astro';
 import PostList from '../../components/post-list.astro';
 import Seo from '../../components/seo.astro';
-
-const err = (code: number) => {
-    Astro.response.status = code;
-    Astro.response.statusText =
-        { 404: 'Not found', 500: 'Internal server error' }[code] ?? 'Error';
-    return new Response(null, Astro.response);
-};
+import err from '../../util/http-error';
 
 const { tag } = Astro.params;
 const pageStr = Astro.url.searchParams.get('p') ?? '1';

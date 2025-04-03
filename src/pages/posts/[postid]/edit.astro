@@ -3,15 +3,7 @@ import { EditPostForm } from '../../../components/post-form/post-form';
 import Seo from '../../../components/seo.astro';
 import BaseLayout from '../../../layouts/base-layout.astro';
 import { supabase } from '../../../util/supabase.astro';
-
-const err = (code: number) => {
-    Astro.response.status = code;
-    Astro.response.statusText =
-        { 400: 'Bad request', 404: 'Not found', 500: 'Internal server error' }[
-            code
-        ] ?? 'Error';
-    return new Response(null, Astro.response);
-};
+import err from '../../../util/http-error';
 
 const editKey = Astro.url.searchParams.get('key');
 const { postid } = Astro.params;
@@ -27,7 +19,7 @@ const { data: postInfo, error } = await supabase()
     .single();
 
 if (error || !editKey || editKey !== postInfo?.edit_key) {
-    return err(400);
+    return err(403);
 }
 ---
 
