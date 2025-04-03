@@ -4,8 +4,8 @@ import { NewPostForm } from '../components/post-form/post-form';
 import Seo from '../components/seo.astro';
 ---
 
-<Seo title="New Post" />
 <BaseLayout title="New">
+    <Seo title="New Post"/>
     <h1>New post</h1>
     <NewPostForm client:load />
 </BaseLayout>

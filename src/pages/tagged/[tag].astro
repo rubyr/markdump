@@ -5,9 +5,11 @@ import Pagination from '../../components/pagination.astro';
 import PostList from '../../components/post-list.astro';
 import Seo from '../../components/seo.astro';
 import err from '../../util/http-error';
+import SortBy, { sortPostQuery, type SortType } from '../../components/sort-by/sort-by';
 
 const { tag } = Astro.params;
 const pageStr = Astro.url.searchParams.get('p') ?? '1';
+const sortBy = Astro.url.searchParams.get('sort') ?? 'newest';
 
 if (!tag) {
     return err(404);
@@ -17,13 +19,13 @@ const pageIndex = (parseInt(pageStr) || 1) - 1;
 
 const RESULTS_PER_PAGE = 20;
 
-const { data: posts, error: postsError } = await supabase()
+let dbQuery = supabase()
     .from('posts')
     .select('title, created_at, tags, id')
     .eq('unlisted', false)
-    .contains('tags', [tag])
-    .order('created_at', { ascending: false })
-    .range(
+    .contains('tags', [tag]);
+sortPostQuery(dbQuery, sortBy as SortType);
+const { data: posts, error: postsError } = await dbQuery.range(
         pageIndex * RESULTS_PER_PAGE,
         pageIndex * RESULTS_PER_PAGE + (RESULTS_PER_PAGE - 1)
     );
@@ -40,6 +42,7 @@ const totalPages = Math.ceil((total ?? 1) / RESULTS_PER_PAGE);
 <Seo description={`All posts tagged #${tag}`} />
 <BaseLayout title={`tagged "${tag}"`}>
     <h1>tagged "{tag}"</h1>
+    <SortBy client:only="preact"/>
     {(posts?.length ?? 0) > 4 && <Pagination page={pageIndex} totalPages={totalPages} />}
     <PostList posts={posts} />
     <Pagination page={pageIndex} totalPages={totalPages} />

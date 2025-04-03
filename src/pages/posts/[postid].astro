@@ -43,8 +43,8 @@ const url = Astro.url.href.split('?')[0];
 const editURL = url + `/edit?key=${content.edit_key}`;
 ---
 
-<Seo title={content.title} description={trimmedText} />
 <BaseLayout title={`${content.title || 'Untitled'}`}>
+    <Seo title={content.title} description={trimmedText} />
     {
         showCopyLinkWarning && (
             <section class="attention">
