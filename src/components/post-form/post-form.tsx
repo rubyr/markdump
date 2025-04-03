@@ -52,7 +52,7 @@ const PostForm = ({ onSubmit, errors, data, children }: PostFormProps) => {
                     <input
                         type="checkbox"
                         name="unlisted"
-                        checked={data?.unlisted || true}
+                        checked={data?.unlisted ?? true}
                     />{' '}
                     Unlisted (exclude this from search results)
                 </label>
