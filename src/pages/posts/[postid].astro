@@ -62,9 +62,11 @@ const url = Astro.url.href;
                 {content.unlisted && <small class="unlisted">(Unlisted)</small>}
             </p>
             <TagList tags={content?.tags} />
-            <a href={`/posts/${postid}/raw`}>View Raw</a>
         </div>
-        <Timestamp client:only="preact" time={content.created_at} />
+        <div class="right">
+            <Timestamp client:only="preact" time={content.created_at} />
+            <span><a href={`/posts/${postid}/raw`} download={`${content.title}.md`}>Download</a></span>
+        </div>
     </section>
     <article class="post-body" set:html={html} />
 </BaseLayout>
@@ -106,6 +108,12 @@ const url = Astro.url.href;
 
         .unlisted {
             opacity: 0.5;
+        }
+
+        .right {
+            display: flex;
+            flex-direction: column;
+            text-align: right;
         }
     }
 
