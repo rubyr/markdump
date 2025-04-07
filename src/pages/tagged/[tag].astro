@@ -21,7 +21,7 @@ const RESULTS_PER_PAGE = 20;
 
 let dbQuery = supabase()
     .from('posts')
-    .select('title, created_at, tags, id')
+    .select('title, created_at, tags, id, adult_content')
     .eq('unlisted', false)
     .contains('tags', [tag]);
 sortPostQuery(dbQuery, sortBy as SortType);
