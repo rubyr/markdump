@@ -97,7 +97,7 @@ const editURL = url + `/edit?key=${content.edit_key}`;
                 )
             }
             <span><a href={`/posts/${postid}/raw`} download={`${content.title}.md`}>Download</a></span>
-            {content.adult_content || <div>Marked as 18+</div>}
+            {content.adult_content && <div>Marked as 18+</div>}
         </div>
     </section>
     <article class="post-body" set:html={html} />

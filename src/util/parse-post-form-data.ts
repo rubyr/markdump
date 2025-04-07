@@ -5,6 +5,7 @@ export interface PostData {
     tags: string[],
     body: string,
     unlisted: boolean,
+    adult_content: boolean,
 }
 
 const parsePostFormData = (data: FormData): PostData => {
@@ -24,11 +25,13 @@ const parsePostFormData = (data: FormData): PostData => {
         allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
     });
     const unlisted = data.get('unlisted') === 'on'; // why.
+    const adult_content = data.get('adult_content') === 'on';
 
     return {
         title,
         tags,
         body,
+        adult_content,
         unlisted
     };
 };
