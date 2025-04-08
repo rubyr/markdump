@@ -80,7 +80,6 @@ const editURL = url + `/edit?key=${content.edit_key}`;
                 {content.unlisted && <small class="unlisted">(Unlisted)</small>}
             </p>
             <TagList tags={content?.tags} />
-            <a href={`/posts/${postid}/raw`}>View Raw</a>
         </div>
         <div class="right">
             <Timestamp client:only="preact" time={content.created_at} />
@@ -96,6 +95,7 @@ const editURL = url + `/edit?key=${content.edit_key}`;
                     </small>
                 )
             }
+            <span><a href={`/posts/${postid}/raw`} download={`${content.title}.md`}>Download</a></span>
         </div>
     </section>
     <article class="post-body" set:html={html} />
@@ -128,6 +128,7 @@ const editURL = url + `/edit?key=${content.edit_key}`;
             display: flex;
             flex-direction: column;
             align-items: end;
+            text-align: right;
         }
     }
 
