@@ -6,13 +6,8 @@ import { supabase } from '../../util/supabase.astro';
 import Timestamp from '../../components/timestamp';
 import TagList from '../../components/tag-list.astro';
 import Seo from '../../components/seo.astro';
-
-const err = (code: number) => {
-    Astro.response.status = code;
-    Astro.response.statusText =
-        { 404: 'Not found', 500: 'Internal server error' }[code] ?? 'Error';
-    return new Response(null, Astro.response);
-};
+import CopyToClipboard from '../../components/copy-to-clipboard';
+import err from '../../util/http-error';
 
 const { postid } = Astro.params;
 
@@ -20,7 +15,10 @@ if (!postid) {
     return err(404);
 }
 
-const { data, error } = await supabase().from('posts').select().eq('id', postid);
+const { data, error } = await supabase()
+    .from('posts')
+    .select()
+    .eq('id', postid);
 
 if (error || data.length === 0) {
     return err(404);
@@ -33,26 +31,46 @@ if (data.length > 1) {
 
 const content = data[0];
 
-const trimmedText = content.body.slice(0, 100) + (content.body.length > 100 ? '...' : '');
+const trimmedText =
+    content.body.slice(0, 100) + (content.body.length > 100 ? '...' : '');
 
 const html = sanitizeHtml(await marked.parse(content.body), {
     allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
 });
 
-const showCopyLinkWarning = Astro.url.searchParams.get('created') !== null;
-const url = Astro.url.href;
+const showCopyLinkWarning = Astro.url.searchParams.get('created') === content.edit_key;
+const url = Astro.url.href.split('?')[0];
+const editURL = url + `/edit?key=${content.edit_key}`;
 ---
 
 <BaseLayout title={`${content.title || 'Untitled'}`}>
     <Seo title={content.title} description={trimmedText} />
-    {showCopyLinkWarning && 
-    <section class="attention">
-        <div>
-            <div>Post published successfully!</div>
-            {content.unlisted && <div>This post is <em>unlisted</em> - make sure to copy the link so you can get back here.</div>}
-        </div>
-        <button id="copyURL">Copy URL</button>
-    </section>
+    {
+        showCopyLinkWarning && (
+            <section class="attention">
+                <div>
+                    <div>Post published successfully!</div>
+                    {content.unlisted && (
+                        <div>
+                            This post is <em>unlisted</em> - make sure to copy
+                            the link so you can get back here.
+                        </div>
+                    )}
+                </div>
+                <div class="right">
+                    <CopyToClipboard
+                        client:only="preact"
+                        type="success"
+                        data={url}
+                    >
+                        Copy URL
+                    </CopyToClipboard>
+                    <CopyToClipboard client:only="preact" type="info" data={editURL}>
+                        Copy edit URL
+                    </CopyToClipboard>
+                </div>
+            </section>
+        )
     }
 
     <section class="info">
@@ -65,27 +83,23 @@ const url = Astro.url.href;
         </div>
         <div class="right">
             <Timestamp client:only="preact" time={content.created_at} />
+            {
+                content.edited_at && (
+                    <small>
+                        (edited{' '}
+                        <Timestamp
+                            client:only="preact"
+                            time={content.edited_at}
+                        />
+                        )
+                    </small>
+                )
+            }
             <span><a href={`/posts/${postid}/raw`} download={`${content.title}.md`}>Download</a></span>
         </div>
     </section>
     <article class="post-body" set:html={html} />
 </BaseLayout>
-
-<script>
-    const btn = document.getElementById('copyURL');
-    let restoreTextInterval : NodeJS.Timeout;
-    btn?.addEventListener('click',() => {
-        navigator.clipboard.writeText(window.location.href.split('?')[0]);
-        const originalText = btn.innerText;
-        btn.innerText = 'Copied!';
-        if (restoreTextInterval) {
-            clearInterval(restoreTextInterval);
-        }
-        restoreTextInterval = setInterval(() => {
-            btn.innerText = originalText;
-        }, 1000);
-    })
-</script>
 
 <style>
     section.info {
@@ -113,6 +127,7 @@ const url = Astro.url.href;
         .right {
             display: flex;
             flex-direction: column;
+            align-items: end;
             text-align: right;
         }
     }
@@ -120,7 +135,7 @@ const url = Astro.url.href;
     .post-body {
         word-break: break-word;
     }
-    
+
     section.attention {
         display: flex;
         flex-direction: row;
@@ -130,10 +145,6 @@ const url = Astro.url.href;
         margin-right: 2em;
 
         background: var(--gradient-secondary);
-
-        button {
-            background: var(--gradient-success);
-        }
     }
 </style>
 
