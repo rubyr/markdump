@@ -108,8 +108,8 @@ const showAdultWarning = !canViewAdultContent && content.adult_content;
                     </small>
                 )
             }
-            <span><a href={`/posts/${postid}/raw`} download={`${content.title}.md`}>Download</a></span>
             {content.adult_content && <div>Marked as 18+</div>}
+            <span><a href={`/posts/${postid}/raw`} download={`${content.title}.md`}>Download</a></span>
         </div>
     </section>
     <article class="post-body" set:html={html} />
