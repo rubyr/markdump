@@ -6,11 +6,12 @@ import PostList from '../../components/post-list.astro';
 import Seo from '../../components/seo.astro';
 import err from '../../util/http-error';
 import SortBy, { sortPostQuery, type SortType } from '../../components/sort-by/sort-by';
-import ShowAdultToggle from '../../components/sort-by/show-adult';
+import ShowAdultToggle, { filterAdultPostQuery } from '../../components/sort-by/show-adult';
 
 const { tag } = Astro.params;
 const pageStr = Astro.url.searchParams.get('p') ?? '1';
 const sortBy = Astro.url.searchParams.get('sort') ?? 'newest';
+const showAdultPosts = Astro.url.searchParams.get('adult') === 'true';
 
 if (!tag) {
     return err(404);
@@ -25,6 +26,7 @@ let dbQuery = supabase()
     .select('title, created_at, tags, id, adult_content')
     .eq('unlisted', false)
     .contains('tags', [tag]);
+filterAdultPostQuery(dbQuery, showAdultPosts);
 sortPostQuery(dbQuery, sortBy as SortType);
 const { data: posts, error: postsError } = await dbQuery.range(
         pageIndex * RESULTS_PER_PAGE,
