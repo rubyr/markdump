@@ -6,6 +6,7 @@ import PostList from '../../components/post-list.astro';
 import Seo from '../../components/seo.astro';
 import err from '../../util/http-error';
 import SortBy, { sortPostQuery, type SortType } from '../../components/sort-by/sort-by';
+import ShowAdultToggle from '../../components/sort-by/show-adult';
 
 const { tag } = Astro.params;
 const pageStr = Astro.url.searchParams.get('p') ?? '1';
@@ -43,6 +44,7 @@ const totalPages = Math.ceil((total ?? 1) / RESULTS_PER_PAGE);
 <BaseLayout title={`tagged "${tag}"`}>
     <h1>tagged "{tag}"</h1>
     <SortBy client:only="preact"/>
+    <ShowAdultToggle client:only="preact"/>
     {(posts?.length ?? 0) > 4 && <Pagination page={pageIndex} totalPages={totalPages} />}
     <PostList posts={posts} />
     <Pagination page={pageIndex} totalPages={totalPages} />
