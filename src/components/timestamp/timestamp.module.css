@@ -1,0 +1,4 @@
+.timestamp {
+    color: var(--secondary);
+    font-size: calc(var(--font-size-base) * 0.8);
+}

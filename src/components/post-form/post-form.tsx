@@ -56,6 +56,14 @@ const PostForm = ({ onSubmit, errors, data, children }: PostFormProps) => {
                     />{' '}
                     Unlisted (exclude this from search results)
                 </label>
+                <label>
+                    <input
+                        type="checkbox"
+                        name="adult_content"
+                        checked={data?.adult_content ?? false}
+                    />{' '}
+                    This post contains adult content (18+)
+                </label>
                 {children}
                 <button class="success">Submit</button>
             </section>
