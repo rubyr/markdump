@@ -1,19 +1,46 @@
-import { type PropsWithChildren } from "preact/compat";
+import type React from "preact/compat";
+import { useEffect, useRef } from "preact/hooks";
+import styles from './modal.module.css';
 
 type ModalProps = {
-    closeButtonText : string | undefined
-    open : boolean | undefined
-};
+    isOpen: boolean;
+    onClose?: () => void;
+    hasCloseButton?: boolean;
+    children: React.ReactNode;
+    hidePage?: boolean;
+}
 
-const Modal = ({children, closeButtonText='Close', open}:PropsWithChildren<ModalProps>) => {
+const Modal = ({children, isOpen, hasCloseButton = true, hidePage = false, onClose}:ModalProps) => {
+
+    const modalRef = useRef<HTMLDialogElement>(null);
+
+    useEffect(() => {
+        const modalElement = modalRef.current;
+        if (!modalElement) return;
+
+        if (isOpen) {
+            modalElement.showModal();
+        }else{
+            modalElement.close();
+        }
+    },[isOpen]);
+
+    const handleCloseModal = () => {
+        if (onClose) {
+            onClose();
+        }
+        modalRef.current?.close();
+    }
+
     return (
-        <dialog open={open}>
-            {children}
-            <form method='dialog'>
-                <button>{closeButtonText}</button>
-            </form>
+        <dialog ref={modalRef} className={hidePage ? styles.hiddenBackground : undefined}>
+            {hasCloseButton && <button class={styles.modalCloseButton} onClick={handleCloseModal} aria-label="Close">X</button>}
+            <div class={styles.modalChildren}>
+                {children}
+            </div>
         </dialog>
     );
+
 };
 
 export default Modal;

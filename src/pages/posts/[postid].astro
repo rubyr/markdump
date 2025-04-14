@@ -5,10 +5,10 @@ import sanitizeHtml from 'sanitize-html';
 import { supabase } from '../../util/supabase.astro';
 import Timestamp from '../../components/timestamp/timestamp';
 import TagList from '../../components/tag-list.astro';
-import Modal from '../../components/modal/modal';
 import Seo from '../../components/seo.astro';
 import CopyToClipboard from '../../components/copy-to-clipboard';
 import err from '../../util/http-error';
+import Modal from '../../components/modal/modal';
 
 const { postid } = Astro.params;
 
@@ -42,10 +42,22 @@ const html = sanitizeHtml(await marked.parse(content.body), {
 const showCopyLinkWarning = Astro.url.searchParams.get('created') === content.edit_key;
 const url = Astro.url.href.split('?')[0];
 const editURL = url + `/edit?key=${content.edit_key}`;
----
 
+const canViewAdultContent = Astro.url.searchParams.get('adult');
+const showAdultWarning = !canViewAdultContent && content.adult_content;
+---
 <BaseLayout title={`${content.title || 'Untitled'}`}>
     <Seo title={content.title} description={trimmedText} />
+
+    <Modal client:only="preact" isOpen={true} hidePage={true}>
+        <h1>Heads up</h1>
+        <p>The following post contains adult content. By proceeding, you agree that you are at least 18 years old.</p>
+        <div class="modalButtons">
+            <form method="dialog"><button>Ok</button></form>
+            <button onclick="history.back()">Take me back</button>
+        </div>
+    </Modal>
+
     {
         showCopyLinkWarning && (
             <section class="attention">
@@ -136,6 +148,12 @@ const editURL = url + `/edit?key=${content.edit_key}`;
             align-items: end;
             text-align: right;
         }
+    }
+
+    .modalButtons {
+        display: flex;
+        flex-direction: row;
+        gap: var(--spacing-base);
     }
 
     .post-body {
