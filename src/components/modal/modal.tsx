@@ -10,7 +10,11 @@ type ModalProps = {
     hidePage?: boolean;
 }
 
-const Modal = ({children, isOpen, hasCloseButton = true, hidePage = false, onClose}:ModalProps) => {
+const setDisableScrolling = (disabled:boolean) => {
+    document.body.style.overflow = disabled ? 'hidden' : 'auto';
+}
+
+const Modal = ({children, isOpen, hasCloseButton = true, hidePage = false,onClose}:ModalProps) => {
 
     const modalRef = useRef<HTMLDialogElement>(null);
 
@@ -20,8 +24,10 @@ const Modal = ({children, isOpen, hasCloseButton = true, hidePage = false, onClo
 
         if (isOpen) {
             modalElement.showModal();
+            setDisableScrolling(true);
         }else{
             modalElement.close();
+            setDisableScrolling(false);
         }
     },[isOpen]);
 
@@ -29,6 +35,7 @@ const Modal = ({children, isOpen, hasCloseButton = true, hidePage = false, onClo
         if (onClose) {
             onClose();
         }
+        setDisableScrolling(false);
         modalRef.current?.close();
     }
 

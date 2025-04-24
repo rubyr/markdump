@@ -7,8 +7,8 @@ import Timestamp from '../../components/timestamp/timestamp';
 import TagList from '../../components/tag-list.astro';
 import Seo from '../../components/seo.astro';
 import CopyToClipboard from '../../components/copy-to-clipboard';
-import err from '../../util/http-error';
 import Modal from '../../components/modal/modal';
+import AdultBadge from '../../components/adult-badge.astro';
 
 const { postid } = Astro.params;
 
@@ -49,7 +49,7 @@ const showAdultWarning = !canViewAdultContent && content.adult_content;
 <BaseLayout title={`${content.title || 'Untitled'}`}>
     <Seo title={content.title} description={trimmedText} />
 
-    <Modal client:only="preact" isOpen={true} hidePage={true}>
+    <Modal client:only="preact" isOpen={showAdultWarning} hidePage={true} hasCloseButton={false}>
         <h1>Heads up</h1>
         <p>The following post contains adult content. By proceeding, you agree that you are at least 18 years old.</p>
         <div class="modalButtons">
@@ -108,7 +108,7 @@ const showAdultWarning = !canViewAdultContent && content.adult_content;
                     </small>
                 )
             }
-            {content.adult_content && <div>Marked as 18+</div>}
+            {content.adult_content && <AdultBadge/>}
             <span><a href={`/posts/${postid}/raw`} download={`${content.title}.md`}>Download</a></span>
         </div>
     </section>
@@ -169,6 +169,10 @@ const showAdultWarning = !canViewAdultContent && content.adult_content;
         margin-right: 2em;
 
         background: var(--gradient-secondary);
+    }
+
+    .adult-badge {
+        background-color: rgb(233, 70, 70);
     }
 </style>
 

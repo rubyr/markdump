@@ -1,4 +1,5 @@
 ---
+import AdultBadge from "./adult-badge.astro";
 import TagList from "./tag-list.astro";
 import Timestamp from "./timestamp/timestamp";
 
@@ -17,7 +18,7 @@ const { posts } = Astro.props;
                     </div>
                     <div class="right">
                         <Timestamp client:only="preact" time={post.created_at} />
-                        {post.adult_content && <div>This post is flagged as 18+</div>}
+                        {post.adult_content && <AdultBadge/>}
                     </div>
                 </li>
             ))}
