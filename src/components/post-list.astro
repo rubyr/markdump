@@ -1,6 +1,7 @@
 ---
+import AdultBadge from "./adult-badge.astro";
 import TagList from "./tag-list.astro";
-import Timestamp from "./timestamp";
+import Timestamp from "./timestamp/timestamp";
 
 const { posts } = Astro.props;
 ---
@@ -8,12 +9,17 @@ const { posts } = Astro.props;
 {
     posts?.length ? (
         <ul class="postList">
-            {posts.map((post: { id: any; title: any; created_at: string; tags: string[]; }) => (
+            {posts.map((post: { id: any; title: any; created_at: string; tags: string[]; adult_content: boolean }) => (
                 <li class="postListing">
-                    <span class="title"><a href={`/posts/${post.id}`}>{post.title || 'Untitled'}</a></span>
-                    <div>by Anonymous</div>
-                    <div class="timestamp"><Timestamp client:only="preact" time={post.created_at} /></div>
-                    <TagList tags={post.tags} />
+                    <div class="left">
+                        <span class="title"><a href={`/posts/${post.id}`}>{post.title || 'Untitled'}</a></span>
+                        <div>by Anonymous</div>
+                        <TagList tags={post.tags} />
+                    </div>
+                    <div class="right">
+                        <Timestamp client:only="preact" time={post.created_at} />
+                        {post.adult_content && <AdultBadge/>}
+                    </div>
                 </li>
             ))}
         </ul>
@@ -35,7 +41,8 @@ const { posts } = Astro.props;
     li.postListing {
         text-decoration: none;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        justify-content: space-between;
 
         padding: var(--spacing-base);
 
@@ -52,10 +59,12 @@ const { posts } = Astro.props;
                 width: auto;
             }
         }
-    }
-
-    .timestamp {
-        color: var(--secondary);
-        font-size: calc(var(--font-size-base) * 0.8);
+        .left, .right {
+            display: flex;
+            flex-direction: column;
+        }
+        .right {
+            text-align: right;
+        }
     }
 </style>

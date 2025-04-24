@@ -5,6 +5,7 @@ import Pagination from '../components/pagination.astro';
 import PostList from '../components/post-list.astro';
 import Seo from '../components/seo.astro';
 import SortBy, { sortPostQuery, type SortType } from '../components/sort-by/sort-by';
+import ShowAdultToggle, { filterAdultPostQuery } from '../components/sort-by/show-adult';
 
 const query = Astro.url.searchParams.get('q') ?? '';
 
@@ -12,14 +13,16 @@ const pageStr = Astro.url.searchParams.get('p') ?? '1';
 const pageIndex = (parseInt(pageStr) || 1) - 1;
 
 const sortBy = Astro.url.searchParams.get('sort') ?? 'newest';
+const showAdultPosts = Astro.url.searchParams.get('adult') === 'true';
 
 const RESULTS_PER_PAGE = 20;
 
 let dbQuery = supabase()
     .from('posts')
-    .select('title, created_at, tags, id')
+    .select('title, created_at, tags, id, adult_content')
     .eq('unlisted', false)
     .ilike('title', `%${query}%`) // TODO: this is far from a robust search system
+filterAdultPostQuery(dbQuery, showAdultPosts);
 sortPostQuery(dbQuery, sortBy as SortType);
 const { data: posts, error: postsError } = await dbQuery.range(
         pageIndex * RESULTS_PER_PAGE,
@@ -40,6 +43,7 @@ const totalPages = Math.ceil((total ?? 1) / RESULTS_PER_PAGE);
     {query.length > 0 && <h1>Search results for "{query}"</h1>}
     {query.length == 0 && <h1>All posts</h1>}
     <SortBy client:only="preact"/>
+    <ShowAdultToggle client:only="preact"/>
     {(posts?.length ?? 0) > 4 && <Pagination page={pageIndex} totalPages={totalPages} />}
     <PostList posts={posts} />
     <Pagination page={pageIndex} totalPages={totalPages}/>
